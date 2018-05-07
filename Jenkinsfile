@@ -53,6 +53,9 @@ library(
 List arches = params.ARCHES.tokenize(',')
 def errorMessages = ''
 def config = MAQEAPI.v1.getProvisioningConfig(this)
+config.mode = 'SSH'
+config.jobgroup = 'multiarch-qe'
+config.installRhpkg = true
 
 MAQEAPI.v1.runParallelMultiArchTest(
   this,

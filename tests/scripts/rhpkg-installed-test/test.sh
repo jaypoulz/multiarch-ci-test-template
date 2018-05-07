@@ -1,0 +1,1 @@
+rhpkg --help
