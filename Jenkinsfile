@@ -53,10 +53,22 @@ library(
 List arches = params.ARCHES.tokenize(',')
 def errorMessages = ''
 def config = MAQEAPI.v1.getProvisioningConfig(this)
+config.mode = 'SSH'
+config.jobgroup = 'multiarch-qe'
 
-MAQEAPI.v1.runParallelMultiArchTest(
+def target = MAQEAPI.v1.newTargetHost()
+target.distro = 'RHEL-7.4'
+target.arch = 'x86_64'
+target.variant = 'Workstation'
+target.bkrKsMeta = 'none'
+target.bkrMethod = 'nfs'
+target.reserveDuration = 80000
+target.bkrJobGroup = 'multiarch-qe'
+target.bkrHostRequires = [[tag:'hostname', op:'=', value:'kernelci-05.khw.lab.eng.bos.redhat.com']]
+
+MAQEAPI.v1.runTest(
   this,
-  arches,
+  target,
   config,
   { host ->
     /*********************************************************/
