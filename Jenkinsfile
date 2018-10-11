@@ -38,13 +38,18 @@ properties(
           defaultValue: '',
           description: 'Contains the CI_MESSAGE for a message bus triggered build.',
           name: 'CI_MESSAGE'
+        ),
+        string(
+          defaultValue: 'ibm-p8-storage-02-guest-06.khw.lab.eng.bos.redhat.com',
+          description: 'Hostname of the preprovisoined host.',
+          name: 'PREPROVISIONED_HOST'
         )
       ]
     )
   ]
 )
 
-library(
+def lib = library(
   changelog: false,
   identifier: "multiarch-ci-libraries@${params.LIBRARIES_REF}",
   retriever: modernSCM([$class: 'GitSCMSource',remote: "${params.LIBRARIES_REPO}"])
@@ -52,11 +57,18 @@ library(
 
 List arches = params.ARCHES.tokenize(',')
 def errorMessages = ''
-def config = MAQEAPI.v1.getProvisioningConfig(this)
 
-MAQEAPI.v1.runParallelMultiArchTest(
+def config = MAQEAPI.v1.getProvisioningConfig(this)
+config.mode = 'SSH'
+
+def targetHost = MAQEAPI.v1.newTargetHost()
+targetHost.hostname = params.PREPROVISIONED_HOST
+targetHost.arch = 'ppc64le'
+targetHost.provisioner = 'NOOP'
+
+MAQEAPI.v1.runTest(
   this,
-  arches,
+  targetHost,
   config,
   { host ->
     /*********************************************************/
