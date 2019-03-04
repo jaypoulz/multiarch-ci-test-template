@@ -85,4 +85,15 @@ withHdslPod(config) {
             }
         }
     }
-}
+
+    /*****************************************************************/
+    /* END TEST BODY                                                 */
+    /* Do not edit beyond this point                                 */
+    /*****************************************************************/
+  },
+  { Exception exception, def host ->
+    def error = "Exception ${exception} occured on ${host.arch}\n"
+    errorMessages += error
+    currentBuild.result = 'FAILURE'
+  }
+)
