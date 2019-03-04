@@ -40,7 +40,7 @@ withHdslPod(config) {
     node(hdslPodName) {
         stage("Pre-Flight"){
             deleteDir()
-            git(branch:'hdsl',
+            git(branch:'hdsl-openstack',
                 url:'https://github.com/jaypoulz/multiarch-ci-test-template')
         }
 
@@ -53,7 +53,7 @@ withHdslPod(config) {
             singleInfraConfig ->
             try {
                 stage('Clone Test Dir') {
-                    git(branch:'hdsl',
+                    git(branch:'hdsl-openstack',
                         url:'https://github.com/jaypoulz/multiarch-ci-test-template')
                 }
 
@@ -85,15 +85,4 @@ withHdslPod(config) {
             }
         }
     }
-
-    /*****************************************************************/
-    /* END TEST BODY                                                 */
-    /* Do not edit beyond this point                                 */
-    /*****************************************************************/
-  },
-  { Exception exception, def host ->
-    def error = "Exception ${exception} occured on ${host.arch}\n"
-    errorMessages += error
-    currentBuild.result = 'FAILURE'
-  }
-)
+}
