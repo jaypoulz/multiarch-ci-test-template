@@ -1,0 +1,39 @@
+---
+infra:
+  - name: x86_64
+    provision:
+     - baremetal:
+         beaker:
+           key_pair: multiarch-qe
+           instances:
+           - distro: RHEL-ALT-7.5
+             arch: x86_64
+             variant: Server
+             job_group: multiarch-qe
+  - name: ppc64le
+    provision:
+    - baremetal:
+        beaker:
+          key_pair: multiarch-qe
+          instances:
+           - distro: RHEL-ALT-7.5
+             arch: ppc64le
+             variant: Server
+             job_group: multiarch-qe
+             count: 2
+tests:
+  playbooks:
+    - location: tests/ansible-playbooks/host-summary/playbook.yml
+  scripts:
+    - location: tests/scripts/example-test/test.sh
+    - location: tests/scripts/example-test2/test.sh
+results:
+  outputTypes:
+    artifacts:
+      filesToSave:
+        - 'tests/ansible-playbooks/**/artifacts/**/*.*'
+        - 'tests/scripts/**/artifacts/**/*.*'
+  reportTypes:
+    email:
+      recipientEmail:
+      - jpoulin@redhat.com

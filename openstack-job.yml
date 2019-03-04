@@ -1,0 +1,45 @@
+---
+infra:
+  - provision:
+      cloud:
+        openstack:
+          network:
+          - provider_net_cci_1
+          key_pair: jpoulin-openid
+          security_group:
+            - default
+          instances:
+          - name: rnester-database
+            flavor: ci.m1.small
+            image: CentOS-7-x86_64-GenericCloud-1612
+            user: centos
+  - provision:
+      cloud:
+        openstack:
+          network:
+          - provider_net_cci_1
+          key_pair: jpoulin-openid
+          security_group:
+            - default
+          instances:
+          - name: rnester-database
+            flavor: ci.m1.small
+            image: CentOS-7-x86_64-GenericCloud-1612
+            user: centos
+            count: 2
+tests:
+  playbooks:
+    - location: tests/ansible-playbooks/host-summary/playbook.yml
+  scripts:
+    - location: tests/scripts/example-test/test.sh
+    - location: tests/scripts/example-test2/test.sh
+results:
+  outputTypes:
+    artifacts:
+      filesToSave:
+        - 'tests/ansible-playbooks/**/artifacts/**/*.*'
+        - 'tests/scripts/**/artifacts/**/*.*'
+  reportTypes:
+    email:
+      recipientEmail:
+      - jpoulin@redhat.com
